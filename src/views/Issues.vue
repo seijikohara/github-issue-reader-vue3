@@ -69,7 +69,6 @@ export default defineComponent({
       perPageParam.value
     );
 
-    console.log(router);
     const onPageChange = (page: number) =>
       router.push({
         path: "/issues",
