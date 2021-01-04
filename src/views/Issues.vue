@@ -28,7 +28,12 @@
 
 <script lang="ts">
 import { defineComponent, ref } from "vue";
-import { onBeforeRouteUpdate, useRoute, useRouter } from "vue-router";
+import {
+  LocationQuery,
+  onBeforeRouteUpdate,
+  useRoute,
+  useRouter,
+} from "vue-router";
 
 import GitHubService from "@/services/github";
 
@@ -39,15 +44,20 @@ export default defineComponent({
   components: { Pagination },
   async setup() {
     const defaultPerPage = 10;
+
     const issues = ref();
     const pageParam = ref();
     const perPageParam = ref();
     const totalPage = ref();
 
-    onBeforeRouteUpdate((to, from, next) => {
-      pageParam.value = parseInt(to.query["page"] as string) || 1;
+    const resolveQueryParams = (query: LocationQuery) => {
+      pageParam.value = parseInt(query["page"] as string) || 1;
       perPageParam.value =
-        parseInt(to.query["per_page"] as string) || defaultPerPage;
+        parseInt(query["per_page"] as string) || defaultPerPage;
+    };
+
+    onBeforeRouteUpdate((to, from, next) => {
+      resolveQueryParams(to.query);
       GitHubService.getIssues(pageParam.value, perPageParam.value).then(
         (newIssues) => (issues.value = newIssues)
       );
@@ -56,9 +66,8 @@ export default defineComponent({
 
     const router = useRouter();
     const route = useRoute();
-    pageParam.value = parseInt(route.query["page"] as string) || 1;
-    perPageParam.value =
-      parseInt(route.query["per_page"] as string) || defaultPerPage;
+
+    resolveQueryParams(route.query);
 
     const repo = await GitHubService.getRepo();
     const openIssueCount = repo.open_issues_count;
