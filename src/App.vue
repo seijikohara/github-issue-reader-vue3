@@ -19,7 +19,11 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 
-export default defineComponent({});
+import LoadingSpinner from "@/components/LoadingSpinner.vue";
+
+export default defineComponent({
+  components: { LoadingSpinner },
+});
 </script>
 
 <style lang="scss"></style>
