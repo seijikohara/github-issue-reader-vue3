@@ -6,17 +6,6 @@
           class="pagination-link"
           :to="{
             path,
-            query: { [paramNamePage]: 1, [paramNamePerPage]: perPage },
-          }"
-        >
-          &lt;&lt;
-        </router-link>
-      </li>
-      <li>
-        <router-link
-          class="pagination-link"
-          :to="{
-            path,
             query: {
               [paramNamePage]: currentPage - 1,
               [paramNamePerPage]: perPage,
@@ -26,9 +15,26 @@
           &lt;
         </router-link>
       </li>
+      <li>
+        <router-link
+          class="pagination-link"
+          :class="{ 'is-current': currentPage === 1 }"
+          :to="{
+            path,
+            query: { [paramNamePage]: 1, [paramNamePerPage]: perPage },
+          }"
+        >
+          1
+        </router-link>
+      </li>
+      <li v-if="hasEllipsisBegin">
+        <span class="pagination-ellipsis">&hellip;</span>
+      </li>
       <li v-for="index in totalPage" :key="index">
         <router-link
           v-if="
+            index !== 1 &&
+            index !== totalPage &&
             index - displayPageCount <= currentPage &&
             currentPage <= index + displayPageCount
           "
@@ -40,6 +46,24 @@
           }"
         >
           {{ index }}
+        </router-link>
+      </li>
+      <li v-if="hasEllipsisEnd">
+        <span class="pagination-ellipsis">&hellip;</span>
+      </li>
+      <li>
+        <router-link
+          class="pagination-link"
+          :class="{ 'is-current': currentPage === totalPage }"
+          :to="{
+            path,
+            query: {
+              [paramNamePage]: totalPage,
+              [paramNamePerPage]: perPage,
+            },
+          }"
+        >
+          {{ totalPage }}
         </router-link>
       </li>
       <li>
@@ -56,26 +80,12 @@
           &gt;
         </router-link>
       </li>
-      <li>
-        <router-link
-          class="pagination-link"
-          :to="{
-            path,
-            query: {
-              [paramNamePage]: totalPage,
-              [paramNamePerPage]: perPage,
-            },
-          }"
-        >
-          &gt;&gt;
-        </router-link>
-      </li>
     </ul>
   </nav>
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext } from "vue";
+import { computed, defineComponent, SetupContext } from "vue";
 
 type Props = {
   currentPage: number;
@@ -122,6 +132,12 @@ export default defineComponent({
   setup(props: Props, context: SetupContext) {
     return {
       onClickPageButton: (index: number) => context.emit("page-change", index),
+      hasEllipsisBegin: computed(
+        () => props.currentPage - props.displayPageCount >= 3
+      ),
+      hasEllipsisEnd: computed(
+        () => props.currentPage + props.displayPageCount <= props.totalPage - 2
+      ),
     };
   },
 });
