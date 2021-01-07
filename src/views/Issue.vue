@@ -16,6 +16,7 @@
 import { computed, defineComponent } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import marked from "marked";
+import DOMPurify from "dompurify";
 
 import GitHubService from "@/services/github";
 
@@ -30,7 +31,7 @@ export default defineComponent({
 
     return {
       issue,
-      bodyHtml: computed(() => marked(issue.body)),
+      bodyHtml: computed(() => DOMPurify.sanitize(marked(issue.body))),
       onClickBack: () => router.back(),
     };
   },

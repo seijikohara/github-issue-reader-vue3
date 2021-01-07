@@ -12,12 +12,14 @@
     "axios": "^0.21.1",
     "bulma": "^0.9.1",
     "core-js": "^3.8.2",
+    "dompurify": "^2.2.6",
     "marked": "^1.2.7",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0"
   },
   "devDependencies": {
+    "@types/dompurify": "^2.2.0",
     "@types/marked": "^1.2.1",
     "@typescript-eslint/eslint-plugin": "^4.11.1",
     "@typescript-eslint/parser": "^4.11.1",
