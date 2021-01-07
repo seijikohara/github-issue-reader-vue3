@@ -35,7 +35,7 @@ import {
   useRouter,
 } from "vue-router";
 
-import GitHubService from "@/services/github";
+import GitHubService, { Issue } from "@/services/github";
 
 import Pagination from "@/components/Pagination.vue";
 
@@ -45,10 +45,10 @@ export default defineComponent({
   async setup() {
     const defaultPerPage = 10;
 
-    const issues = ref();
-    const pageParam = ref();
-    const perPageParam = ref();
-    const totalPage = ref();
+    const issues = ref([] as Issue[]);
+    const pageParam = ref(1);
+    const perPageParam = ref(defaultPerPage);
+    const totalPage = ref(0);
 
     const resolveQueryParams = (query: LocationQuery) => {
       pageParam.value = parseInt(query["page"] as string) || 1;

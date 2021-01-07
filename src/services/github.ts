@@ -8,7 +8,7 @@ api.interceptors.response.use(
   (error) => Promise.reject(error)
 );
 
-interface Issue {
+export interface Issue {
   url: string;
   repository_url: string;
   labels_url: string;
@@ -37,14 +37,14 @@ interface Issue {
   pull_request?: Pullrequest;
 }
 
-interface Pullrequest {
+export interface Pullrequest {
   url: string;
   html_url: string;
   diff_url: string;
   patch_url: string;
 }
 
-interface Label {
+export interface Label {
   id: number;
   node_id: string;
   url: string;
@@ -54,7 +54,7 @@ interface Label {
   description?: string;
 }
 
-interface User {
+export interface User {
   login: string;
   id: number;
   node_id: string;
@@ -75,7 +75,7 @@ interface User {
   site_admin: boolean;
 }
 
-interface Repo {
+export interface Repo {
   id: number;
   node_id: string;
   name: string;
@@ -155,7 +155,7 @@ interface Repo {
   subscribers_count: number;
 }
 
-interface License {
+export interface License {
   key: string;
   name: string;
   spdx_id: string;
@@ -163,7 +163,7 @@ interface License {
   node_id: string;
 }
 
-interface Owner {
+export interface Owner {
   login: string;
   id: number;
   node_id: string;
