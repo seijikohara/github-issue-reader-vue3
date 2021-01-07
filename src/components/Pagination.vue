@@ -1,5 +1,5 @@
 <template>
-  <nav class="pagination" role="navigation" aria-label="pagination">
+  <nav class="pagination">
     <ul class="pagination-list">
       <li>
         <router-link
@@ -27,28 +27,28 @@
           1
         </router-link>
       </li>
-      <li v-if="hasEllipsisBegin">
+      <li v-if="hasEllipsisFrom">
         <span class="pagination-ellipsis">&hellip;</span>
       </li>
-      <li v-for="index in totalPage" :key="index">
+      <li
+        v-for="visiblePageNumber in visiblePageNumbers"
+        :key="visiblePageNumber"
+      >
         <router-link
-          v-if="
-            index !== 1 &&
-            index !== totalPage &&
-            index - displayPageCount <= currentPage &&
-            currentPage <= index + displayPageCount
-          "
           class="pagination-link"
-          :class="{ 'is-current': currentPage === index }"
+          :class="{ 'is-current': currentPage === visiblePageNumber }"
           :to="{
             path,
-            query: { [paramNamePage]: index, [paramNamePerPage]: perPage },
+            query: {
+              [paramNamePage]: visiblePageNumber,
+              [paramNamePerPage]: perPage,
+            },
           }"
         >
-          {{ index }}
+          {{ visiblePageNumber }}
         </router-link>
       </li>
-      <li v-if="hasEllipsisEnd">
+      <li v-if="hasEllipsisTo">
         <span class="pagination-ellipsis">&hellip;</span>
       </li>
       <li>
@@ -130,12 +130,22 @@ export default defineComponent({
     },
   },
   setup(props: Props, context: SetupContext) {
+    const range = (from: number, to: number) =>
+      [...Array(to - from)].map((_, i) => from + i);
+
     return {
       onClickPageButton: (index: number) => context.emit("page-change", index),
-      hasEllipsisBegin: computed(
+      visiblePageNumbers: computed(() => {
+        let from = props.currentPage - props.displayPageCount;
+        if (from < 2) from = 2;
+        let to = props.currentPage + props.displayPageCount;
+        if (to > props.totalPage - 1) to = props.totalPage - 1;
+        return range(from, to);
+      }),
+      hasEllipsisFrom: computed(
         () => props.currentPage - props.displayPageCount >= 3
       ),
-      hasEllipsisEnd: computed(
+      hasEllipsisTo: computed(
         () => props.currentPage + props.displayPageCount <= props.totalPage - 2
       ),
     };
